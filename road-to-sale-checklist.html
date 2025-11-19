@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Road to the Sale – Checklist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --primary: #0060a8;
+      --primary-dark: #004979;
+      --card-bg: #ffffff;
+      --card-border: #e0e0e0;
+      --completed-bg: #e6f4ea;
+      --completed-border: #46a35e;
+      --text-main: #222222;
+      --text-muted: #555555;
+      --body-bg: #f3f5f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
+      background: var(--body-bg);
+      color: var(--text-main);
+    }
+
+    .app-shell {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px 12px 32px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      margin: 4px 0;
+      color: var(--primary-dark);
+    }
+
+    header p {
+      margin: 4px 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 20px 4px 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--primary-dark);
+      letter-spacing: 0.06em;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 700px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .cards-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 10px 10px 8px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: background 0.18s ease, border-color 0.18s ease,
+        transform 0.1s ease, box-shadow 0.1s ease, opacity 0.18s ease;
+    }
+
+    .card-header-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .card-main {
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 0 0 2px;
+    }
+
+    .badge-completed {
+      display: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1e7a35;
+      background: #d6f3dd;
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .card-points {
+      margin: 4px 0 0;
+      padding-left: 16px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .card-footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-main);
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .step-tag {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #eef3f7;
+      color: #3a4b5a;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card.completed {
+      background: var(--completed-bg);
+      border-color: var(--completed-border);
+      opacity: 0.92;
+    }
+
+    .card.completed .badge-completed {
+      display: inline-flex;
+    }
+
+    .card.completed .card-title {
+      text-decoration: line-through;
+      text-decoration-thickness: 1.5px;
+    }
+
+    .card.completed .step-tag {
+      background: #dff0e4;
+      color: #1e7a35;
+    }
+
+    .reset-bar {
+      margin-top: 22px;
+      text-align: center;
+    }
+
+    .reset-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 24px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: var(--primary-dark);
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+    }
+
+    .reset-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+    }
+
+    .helper-text {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="brand-pill">Autopact – Road to the Sale</div>
+      <h1>Sales Process Checklist</h1>
+      <p>Tick each step as you complete it. Every customer. Every time.</p>
+    </header>
+
+    <!-- Stage 1 -->
+    <div class="section-title">Stage 1 – Set up & First Contact</div>
+    <div class="cards-grid">
+      <!-- Merchandising -->
+      <article class="card" data-step-id="merchandising">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Merchandising</h2>
+            <ul class="card-points">
+              <li>Yourself</li>
+              <li>The Dealership</li>
+              <li>Yard</li>
+              <li>Online Showroom</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-merchandising" />
+            Step completed
+          </label>
+          <span class="step-tag">Prep</span>
+        </div>
+      </article>
+
+      <!-- Locate Opportunities -->
+      <article class="card" data-step-id="locate-opportunities">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Locate Opportunities</h2>
+            <ul class="card-points">
+              <li>Eyes on showroom</li>
+              <li>Referrals</li>
+              <li>Service department</li>
+              <li>Database</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-locate-opportunities" />
+            Step completed
+          </label>
+          <span class="step-tag">Prospecting</span>
+        </div>
+      </article>
+
+      <!-- Meet & Greet -->
+      <article class="card" data-step-id="meet-greet">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Meet &amp; Greet</h2>
+            <ul class="card-points">
+              <li>Friendly &amp; enthusiastic</li>
+              <li>Welcome everyone</li>
+              <li>Look professional</li>
+              <li>Use your script</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-meet-greet" />
+            Step completed
+          </label>
+          <span class="step-tag">First impression</span>
+        </div>
+      </article>
+
+      <!-- Qualify -->
+      <article class="card" data-step-id="qualify">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Qualify, Qualify, Qualify</h2>
+            <ul class="card-points">
+              <li>Open-ended questions</li>
+              <li>Who / What / When / Where / Why</li>
+              <li>Finance conditioning</li>
+              <li>Build rapport</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-qualify" />
+            Step completed
+          </label>
+          <span class="step-tag">Discovery</span>
+        </div>
+      </article>
+
+      <!-- Walk Drive Appraisal -->
+      <article class="card" data-step-id="walk-drive-appraisal">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Walk Drive Appraisal</h2>
+            <ul class="card-points">
+              <li>Silent de-valuation</li>
+              <li>Aftercare conditioning</li>
+              <li>Drive vehicle with customer</li>
+              <li>Trade drive route</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-walk-drive-appraisal" />
+            Step completed
+          </label>
+          <span class="step-tag">Appraisal</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Stage 2 -->
+    <div class="section-title">Stage 2 – In-Store Experience</div>
+    <div class="cards-grid">
+      <!-- Dealership Walk -->
+      <article class="card" data-step-id="dealership-walk">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Dealership Walk</h2>
+            <ul class="card-points">
+              <li>Service / Parts</li>
+              <li>Sales</li>
+              <li>Capped price</li>
+              <li>Autopact difference</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-dealership-walk" />
+            Step completed
+          </label>
+          <span class="step-tag">Value build</span>
+        </div>
+      </article>
+
+      <!-- Intro to Sales Manager -->
+      <article class="card" data-step-id="intro-sales-manager">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Intro to Sales Manager</h2>
+            <ul class="card-points">
+              <li>Double open</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-intro-sales-manager" />
+            Step completed
+          </label>
+          <span class="step-tag">Third-party</span>
+        </div>
+      </article>
+
+      <!-- Select Vehicle -->
+      <article class="card" data-step-id="select-vehicle">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Select Vehicle</h2>
+            <ul class="card-points">
+              <li>Sell from stock</li>
+              <li>Aftercare conditioning</li>
+              <li>Trial closing</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-select-vehicle" />
+            Step completed
+          </label>
+          <span class="step-tag">Product</span>
+        </div>
+      </article>
+
+      <!-- Intro to Finance -->
+      <article class="card" data-step-id="intro-finance">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Intro to Finance</h2>
+            <ul class="card-points">
+              <li>Fact finding</li>
+              <li>Book out test drive</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-intro-finance" />
+            Step completed
+          </label>
+          <span class="step-tag">Finance</span>
+        </div>
+      </article>
+
+      <!-- Test Drive -->
+      <article class="card" data-step-id="test-drive">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Test Drive</h2>
+            <ul class="card-points">
+              <li>6-position sell</li>
+              <li>Test drive route</li>
+              <li>No shortcuts</li>
+              <li>You drive first</li>
+              <li>All accompanied test drives</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-test-drive" />
+            Step completed
+          </label>
+          <span class="step-tag">Experience</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Stage 3 -->
+    <div class="section-title">Stage 3 – Closing & Delivery</div>
+    <div class="cards-grid">
+      <!-- Trial Close -->
+      <article class="card" data-step-id="trial-close">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Trial Close</h2>
+            <ul class="card-points">
+              <li>“If everything is right, would you give me the opportunity to earn your business now?”</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-trial-close" />
+            Step completed
+          </label>
+          <span class="step-tag">Close prep</span>
+        </div>
+      </article>
+
+      <!-- Negotiation & Close -->
+      <article class="card" data-step-id="negotiation-close">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Negotiation &amp; Close</h2>
+            <ul class="card-points">
+              <li>Double close</li>
+              <li>Build value</li>
+              <li>Earning the right</li>
+              <li>Have fun</li>
+              <li>BM to close on payments</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-negotiation-close" />
+            Step completed
+          </label>
+          <span class="step-tag">Commitment</span>
+        </div>
+      </article>
+
+      <!-- Introduction to Aftercare / Delivery Coordinator -->
+      <article class="card" data-step-id="aftercare-intro">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Intro to Aftercare / Delivery Coordinator</h2>
+            <ul class="card-points">
+              <li>Opportunity to sell all aftercare products &amp; accessories</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-aftercare-intro" />
+            Step completed
+          </label>
+          <span class="step-tag">Aftercare</span>
+        </div>
+      </article>
+
+      <!-- Business Manager -->
+      <article class="card" data-step-id="business-manager">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Business Manager</h2>
+            <ul class="card-points">
+              <li>BM to take application</li>
+              <li>If no finance, BM to take deposit and convert</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-business-manager" />
+            Step completed
+          </label>
+          <span class="step-tag">Conversion</span>
+        </div>
+      </article>
+
+      <!-- Delivery Experience -->
+      <article class="card" data-step-id="delivery-experience">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Delivery Experience</h2>
+            <ul class="card-points">
+              <li>Creating lasting memories</li>
+              <li>A WOW experience</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-delivery-experience" />
+            Step completed
+          </label>
+          <span class="step-tag">WOW</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Stage 4 -->
+    <div class="section-title">Stage 4 – Handover & Follow Up</div>
+    <div class="cards-grid">
+      <!-- Intro to Service -->
+      <article class="card" data-step-id="intro-service">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Intro to Service</h2>
+            <ul class="card-points">
+              <li>Ensure 100% deliveries are booked in at time of delivery</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-intro-service" />
+            Step completed
+          </label>
+          <span class="step-tag">Retention</span>
+        </div>
+      </article>
+
+      <!-- 24 hour Follow Up -->
+      <article class="card" data-step-id="follow-up-24">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">24-Hour Follow Up</h2>
+            <ul class="card-points">
+              <li>Referral opportunity</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-follow-up-24" />
+            Step completed
+          </label>
+          <span class="step-tag">Delight</span>
+        </div>
+      </article>
+
+      <!-- Sign Up to Delivery -->
+      <article class="card" data-step-id="sign-up-delivery">
+        <div class="card-header-row">
+          <div class="card-main">
+            <h2 class="card-title">Sign Up to Delivery</h2>
+            <ul class="card-points">
+              <li>Communication is key to ensuring a positive purchase experience</li>
+            </ul>
+          </div>
+          <span class="badge-completed">Done</span>
+        </div>
+        <div class="card-footer-row">
+          <label class="checkbox-label">
+            <input type="checkbox" class="step-checkbox" id="chk-sign-up-delivery" />
+            Step completed
+          </label>
+          <span class="step-tag">Communication</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="reset-bar">
+      <button class="reset-btn" id="resetAll">Reset All Steps</button>
+      <div class="helper-text">
+        Checklists are stored on this device only. Hit “Reset” to clear all ticks.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_PREFIX = "rtts-step-";
+
+      function updateCardState(card, checked) {
+        if (!card) return;
+        if (checked) {
+          card.classList.add("completed");
+        } else {
+          card.classList.remove("completed");
+        }
+      }
+
+      const checkboxes = document.querySelectorAll(".step-checkbox");
+
+      // Load state from localStorage
+      checkboxes.forEach((cb) => {
+        const stepId = cb.id || cb.closest(".card")?.dataset.stepId;
+        if (!stepId) return;
+        const stored = localStorage.getItem(STORAGE_PREFIX + stepId);
+        if (stored === "1") {
+          cb.checked = true;
+        }
+        const card = cb.closest(".card");
+        updateCardState(card, cb.checked);
+
+        cb.addEventListener("change", () => {
+          const checked = cb.checked;
+          const card = cb.closest(".card");
+          updateCardState(card, checked);
+          try {
+            localStorage.setItem(
+              STORAGE_PREFIX + stepId,
+              checked ? "1" : "0"
+            );
+          } catch (e) {
+            // ignore storage errors
+          }
+        });
+      });
+
+      // Reset all
+      document.getElementById("resetAll").addEventListener("click", () => {
+        if (!confirm("Clear all completed steps on this device?")) return;
+
+        checkboxes.forEach((cb) => {
+          cb.checked = false;
+          const card = cb.closest(".card");
+          updateCardState(card, false);
+          const stepId = cb.id || card?.dataset.stepId;
+          if (stepId) {
+            try {
+              localStorage.removeItem(STORAGE_PREFIX + stepId);
+            } catch (e) { }
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
